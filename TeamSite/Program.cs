@@ -18,6 +18,7 @@ namespace TeamSite
                 .AddJsonFile("hosting.json", optional: true)
                 .Build();
             var host = new WebHostBuilder()
+                .UseConfiguration(config)
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
