@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Create new Milestone Rule";
+}
+
+<h1>This section of the site is currently under construction...<br /> Stay tuned.</h1>
+
+@using (Html.BeginForm("SendMail", "EmailEngine"))
+{
+    <div class="row">
+        <div class="col-md-6 col-md-offset-2">
+            <label>Name </label>
+            <div class="form-group">
+                <input name="name" type="text" class="form-group" />
+            </div>
+        </div>
+        <div class="col-md-6 col-md-offset-2">
+            <label>Email </label>
+            <div class="form-group">
+                <input name="email" type="text" class="form-group" />
+            </div>
+        </div>
+        <div class="col-md-6 col-md-offset-2">
+            <label>Message </label>
+            <div class="form-group">
+                <textarea name="msg" type="text" class="form-group"></textarea>
+            </div>
+        </div>
+        <div class="col-md-6 col-md-offset-2">
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </div>
+    </div>
+}
