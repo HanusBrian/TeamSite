@@ -1,9 +1,9 @@
-c:\users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\bin\Debug\netcoreapp1.0\TeamSite.deps.json
-c:\users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\bin\Debug\netcoreapp1.0\TeamSite.runtimeconfig.json
-c:\users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\bin\Debug\netcoreapp1.0\TeamSite.runtimeconfig.dev.json
-c:\users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\obj\Debug\netcoreapp1.0\TeamSite.csprojResolveAssemblyReference.cache
-c:\users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\obj\Debug\netcoreapp1.0\TeamSite.AssemblyInfo.cs
-c:\users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\bin\Debug\netcoreapp1.0\TeamSite.dll
+C:\Users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\bin\Debug\netcoreapp1.0\TeamSite.deps.json
+C:\Users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\bin\Debug\netcoreapp1.0\TeamSite.runtimeconfig.json
+C:\Users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\bin\Debug\netcoreapp1.0\TeamSite.runtimeconfig.dev.json
+C:\Users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\bin\Debug\netcoreapp1.0\TeamSite.dll
 C:\Users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\bin\Debug\netcoreapp1.0\TeamSite.pdb
+C:\Users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\obj\Debug\netcoreapp1.0\TeamSite.csprojResolveAssemblyReference.cache
+C:\Users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\obj\Debug\netcoreapp1.0\TeamSite.AssemblyInfo.cs
 C:\Users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\obj\Debug\netcoreapp1.0\TeamSite.dll
 C:\Users\hanusbr\documents\visual studio 2017\Projects\TeamSite\TeamSite\obj\Debug\netcoreapp1.0\TeamSite.pdb
