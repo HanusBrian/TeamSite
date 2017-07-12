@@ -57,8 +57,8 @@ namespace TeamSite.Controllers
                     fs.Flush();
                 }
             }
-            //try
-            //{
+            try
+            {
                 string sWebRootFolder = _hostingEnvironment.WebRootPath;
                 string sFileName = files[0].FileName;
                 FileInfo filePath = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
@@ -68,12 +68,34 @@ namespace TeamSite.Controllers
                 // Find TargetDate (Column 9 "I") that is between the chosen startDate and endDate
                 List<String[]> result = FindRowsInDateRange(data, startDate, endDate);
 
+                String resultString = ListToString(result);
+                SendMail("Brian", "brian.hanus@ecolab.com", resultString);
+
                 return View("UploadFiles", result);
-            //}
-            //catch(Exception e)
-            //{
-            //    return View("UploadFiles", null);
-            //}
+            }
+            catch (Exception e)
+            {
+                return View("UploadFiles", null);
+            }
+        }
+
+        public String ListToString(List<String[]> result)
+        {
+            String output = "<table>";
+    
+            foreach(var row in result)
+            {
+                output += "<tr>";
+                for(int j = 0; j < row.GetLength(0); j++)
+                {
+                    output += "<td>" + row[j] + "</td>";
+                }
+                output += "</tr>";
+            }
+
+            output += "</table>";
+
+            return output;
         }
 
         public List<String[]> FindRowsInDateRange(String[,] data, DateTime startDate, DateTime endDate)
