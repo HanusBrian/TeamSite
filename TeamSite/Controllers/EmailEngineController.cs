@@ -187,7 +187,7 @@ namespace TeamSite.Controllers
             {
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress("brian.hanus@outlook.com"));
-                message.To.Add(new MailboxAddress("anthony.pilipauskas@ecolab.com"));
+                message.To.Add(new MailboxAddress("brian.hanus@ecolab.com"));
                 message.Subject = programName + " - MileStone";
                 message.Body = new TextPart("html")
                 {
