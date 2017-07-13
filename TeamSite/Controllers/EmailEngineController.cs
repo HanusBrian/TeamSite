@@ -208,7 +208,7 @@ namespace TeamSite.Controllers
                 {
                     client.Connect("smtp-mail.outlook.com", 587);
                     client.Authenticate("brian.hanus@outlook.com", "Bh167471");
-                    client.Send(message);
+                    await client.SendAsync(message);
                     client.Disconnect(false);
                 }
             }
