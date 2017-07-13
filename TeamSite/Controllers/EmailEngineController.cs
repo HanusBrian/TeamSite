@@ -37,7 +37,7 @@ namespace TeamSite.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadFiles(List<IFormFile> files, DateTime startDate, DateTime endDate)
+        public async IActionResult UploadFiles(List<IFormFile> files, DateTime startDate, DateTime endDate)
         {
             long size = 0;
             foreach (var file in files)
@@ -65,7 +65,7 @@ namespace TeamSite.Controllers
                 // Find TargetDate (Column 9 "I") that is between the chosen startDate and endDate
                 List<String[]> result = FindRowsInDateRange(data, startDate, endDate);
 
-                GenerateEmails(result);
+                await GenerateEmails(result);
 
                 String resultString = ListToString(result);
 
