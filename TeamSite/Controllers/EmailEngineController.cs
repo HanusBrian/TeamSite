@@ -181,15 +181,13 @@ namespace TeamSite.Controllers
             }
         }
 
-        public async 
-        Task
-SendMail(string emailTo, string emailFrom, string programName, DateTime launchDate)
+        public async Task SendMail(string emailTo, string emailFrom, string programName, DateTime launchDate)
         {
             try
             {
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress("brian.hanus@outlook.com"));
-                message.To.Add(new MailboxAddress("brian.hanus@ecolab.com"));
+                message.To.Add(new MailboxAddress("anthony.pilipauskas@ecolab.com"));
                 message.Subject = programName + " - MileStone";
                 message.Body = new TextPart("html")
                 {
