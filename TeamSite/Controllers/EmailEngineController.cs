@@ -94,7 +94,14 @@ namespace TeamSite.Controllers
 
                 DateTime launchDate = Convert.ToDateTime(row[8]);
 
-                await SendMail(emailTo, programName, emailFrom, launchDate);
+                try
+                {
+                    await SendMail(emailTo, emailFrom, programName, launchDate);
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError("Error Sending Mail in Generate Emails: " + ex.Message + " " + ex.StackTrace);
+                }
             }
         }
 
@@ -174,7 +181,7 @@ namespace TeamSite.Controllers
             }
         }
 
-        public Task<int> SendMail(string emailTo, string programName, string emailFrom, DateTime launchDate)
+        public Task SendMail(string emailTo, string emailFrom, string programName, DateTime launchDate)
         {
             try
             {
