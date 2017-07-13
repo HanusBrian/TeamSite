@@ -73,7 +73,7 @@ namespace TeamSite.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Some error occured in UploadFiles." + ex.Message);
+                _logger.LogError("Some error occured in UploadFiles." + ex.Message + " " + ex.StackTrace);
                 return View("UploadFiles", null);
             }
         }
