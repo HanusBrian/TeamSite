@@ -71,8 +71,9 @@ namespace TeamSite.Controllers
 
                 return View("UploadFiles", result);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                _logger.LogError("Some error occured in UploadFiles." + ex.Message);
                 return View("UploadFiles", null);
             }
         }
@@ -173,7 +174,7 @@ namespace TeamSite.Controllers
             }
         }
 
-        public Task SendMail(string emailTo, string programName, string emailFrom, DateTime launchDate)
+        public Task<int> SendMail(string emailTo, string programName, string emailFrom, DateTime launchDate)
         {
             try
             {
@@ -209,7 +210,6 @@ namespace TeamSite.Controllers
                 _logger.LogCritical("Email not sent: " + e.Message);
             }
             return null;
-            //return View("Index");
         }
     }
 }
