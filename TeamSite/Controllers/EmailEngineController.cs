@@ -37,7 +37,7 @@ namespace TeamSite.Controllers
         }
 
         [HttpPost]
-        public async IActionResult UploadFiles(List<IFormFile> files, DateTime startDate, DateTime endDate)
+        public async Task<IActionResult> UploadFiles(List<IFormFile> files, DateTime startDate, DateTime endDate)
         {
             long size = 0;
             foreach (var file in files)
