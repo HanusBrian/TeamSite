@@ -181,7 +181,9 @@ namespace TeamSite.Controllers
             }
         }
 
-        public Task SendMail(string emailTo, string emailFrom, string programName, DateTime launchDate)
+        public async 
+        Task
+SendMail(string emailTo, string emailFrom, string programName, DateTime launchDate)
         {
             try
             {
@@ -216,7 +218,6 @@ namespace TeamSite.Controllers
             {
                 _logger.LogCritical("Email not sent: " + e.Message);
             }
-            return null;
         }
     }
 }
