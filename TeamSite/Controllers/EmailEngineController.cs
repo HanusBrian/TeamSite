@@ -53,7 +53,7 @@ namespace TeamSite.Controllers
 
             try
             {
-                string sWebRootFolder = _hostingEnvironment.WebRootPath + "\\filesystem\\";
+                string sWebRootFolder = _hostingEnvironment.WebRootPath + "/filesystem/";
                 string sFileName = files[0].FileName;
                 FileInfo filePath = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
 
