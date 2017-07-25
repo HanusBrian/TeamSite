@@ -41,7 +41,15 @@ namespace TeamSite.Controllers
             _logger.LogCritical("Files: " + files.Any() + " startDate: " + startDate + " endDate: " + endDate + " emailSendsTo: " + emailSendsTo);
             // Load the file into the server file system
             FileSystem fileSystem = new FileSystem(_hostingEnvironment, _logger);
-            fileSystem.LoadFilesToFS(files);
+            try
+            {
+                fileSystem.LoadFilesToFS(files);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to load files to FS: " + ex.Message);
+            }
+            
 
             try
             {

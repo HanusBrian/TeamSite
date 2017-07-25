@@ -22,6 +22,7 @@ namespace TeamSite.Models
 
         public String[,] ExcelToStringArray(FileInfo filePath, String worksheetName)
         {
+            _logger.LogCritical("FilePath: " + filePath + "WorksheetName: " + worksheetName);
             try
             {
                 using (ExcelPackage package = new ExcelPackage(filePath))
@@ -52,7 +53,7 @@ namespace TeamSite.Models
             }
             catch (Exception ex)
             {
-                _logger.LogError("Some error occured while importing." + ex.Message);
+                _logger.LogError("Some error occured while importing: " + ex.Message);
                 return new String[0, 0];
             }
         }
@@ -75,25 +76,6 @@ namespace TeamSite.Models
             }
             return result;
         }
-
-        //public List<String[]> FilterOnExactValue(List<String[]> data, int column, String value)
-        //{
-        //    List<String[]> result = new List<string[]>();
-        //    var numRows = data.Count;
-        //    for (int i = 0; i < numRows; i++)
-        //    {
-        //        if (data[i, column] != null && data[i, 8] != "" && Convert.ToDateTime(data[i, 8]) >= startDate && Convert.ToDateTime(data[i, 8]) <= endDate)
-        //        {
-        //            String[] temp = new String[data.GetLength(1)];
-        //            for (int j = 0; j < temp.Length; j++)
-        //            {
-        //                temp[j] = data[i, j];
-        //            }
-        //            result.Add(temp);
-        //        }
-        //    }
-        //    return result;
-        //}
 
         public void CopyFormToTemplate(FileInfo filePath)
         {
