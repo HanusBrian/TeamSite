@@ -57,7 +57,7 @@ namespace TeamSite.Controllers
                 string sFileName = files[0].FileName;
                 FileInfo filePath = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
 
-                // Excel file to String[,]
+                // Excel file to String[,] obviously
                 ExcelTools excelTools = new ExcelTools(_logger, _hostingEnvironment);
                 String[,] data = excelTools.ExcelToStringArray(filePath, "DeploymentRequests");
 
