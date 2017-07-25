@@ -38,6 +38,7 @@ namespace TeamSite.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFiles(List<IFormFile> files, DateTime startDate, DateTime endDate, string emailSendsTo)
         {
+            _logger.LogCritical("Files: " + files.Any() + " startDate: " + startDate + " endDate: " + endDate + " emailSendsTo: " + emailSendsTo);
             // Load the file into the server file system
             FileSystem fileSystem = new FileSystem(_hostingEnvironment, _logger);
             fileSystem.LoadFilesToFS(files);
@@ -146,29 +147,6 @@ namespace TeamSite.Controllers
             catch(Exception e)
             {
                 _logger.LogCritical("Email not sent: " + e.Message);
-            }
-        }
-
-        public async Task CreateFormChangeTemplates(List<IFormFile> stetonFiles)
-        {
-            FileSystem fileSystem = new FileSystem(_hostingEnvironment, _logger);
-
-            fileSystem.LoadFilesToFS(stetonFiles);
-
-            try
-            {
-                string sWebRootFolder = _hostingEnvironment.WebRootPath + "\\filesystem\\";
-                string sFileName = stetonFiles[0].FileName;
-                FileInfo filePath = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
-
-                ExcelTools excelTools = new ExcelTools(_logger, _hostingEnvironment);
-                excelTools.CopyFormToTemplate(filePath);
-
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Some error occured in UploadFiles." + ex.Message + " " + ex.StackTrace);
             }
         }
     }
