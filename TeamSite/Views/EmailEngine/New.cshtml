@@ -6,16 +6,23 @@
 
 @*@using (Html.BeginForm("Upload", "EmailEngine"))
 {*@
+<h1>Step 1: Create Form Change Templates</h1>
+<form method="post" enctype="multipart/form-data" asp-controller="EmailEngine" asp-action="CreateFormChangeTemplates">
+    <div class="row">
+        <label>Upload Steton Form Excel(s) here</label>
+        <div class="form-group">
+            <input class="row" type="file" name="stetonFiles" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+
+<h1>Create and Send Milestone Emails</h1>
 <form method="post" enctype="multipart/form-data" asp-controller="EmailEngine" asp-action="UploadFiles">
     <div class="row">
         <label>Upload Schedule Tracker Here</label>
         <div class="form-group">
             <input class="row" type="file" name="files" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group">
-            <button class="btn btn-primary" type="submit">Upload</button>
         </div>
     </div>
     <div class="row">
@@ -33,30 +40,39 @@
             </div>
         </div>
     </div>
-</form>
-    @*< div class="row">
-        <div class="col-md-6 col-md-offset-2">
-            <label>Name</label>
-            <div class="form-group">
-                <input name = "name" type="text" class="form-group" />
-            </div>
-        </div>
-        <div class="col-md-6 col-md-offset-2">
-            <label>Email</label>
-            <div class="form-group">
-                <input name = "email" type="text" class="form-group" />
-            </div>
-        </div>
-        <div class="col-md-6 col-md-offset-2">
-            <label>Message</label>
-            <div class="form-group">
-                <textarea name = "msg" type="text" class="form-group"></textarea>
-            </div>
-        </div>
-        <div class="col-md-6 col-md-offset-2">
-            <div class="form-group">
-                <button class="btn btn-primary" type="submit">Submit</button>
-            </div>
+    <div class="row">
+        <label>Send Emails to: </label>
+        <input type="email" name="emailSendsTo" />
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Upload</button>
         </div>
     </div>
-}*@
+</form>
+    @*< div class="row">
+                <div class="col-md-6 col-md-offset-2">
+                    <label>Name</label>
+                    <div class="form-group">
+                        <input name = "name" type="text" class="form-group" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-md-offset-2">
+                    <label>Email</label>
+                    <div class="form-group">
+                        <input name = "email" type="text" class="form-group" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-md-offset-2">
+                    <label>Message</label>
+                    <div class="form-group">
+                        <textarea name = "msg" type="text" class="form-group"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6 col-md-offset-2">
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
+                </div>
+            </div>
+        }*@

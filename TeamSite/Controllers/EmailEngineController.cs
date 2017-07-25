@@ -10,8 +10,7 @@ using Microsoft.Extensions.Logging;
 using TeamSite.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using OfficeOpenXml;
-using Microsoft.Net.Http.Headers;
+
 
 namespace TeamSite.Controllers
 {
@@ -37,35 +36,26 @@ namespace TeamSite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadFiles(List<IFormFile> files, DateTime startDate, DateTime endDate)
+        public async Task<IActionResult> UploadFiles(List<IFormFile> files, DateTime startDate, DateTime endDate, string emailSendsTo)
         {
-            long size = 0;
-            foreach (var file in files)
-            {
-                var filename = ContentDispositionHeaderValue
-                                .Parse(file.ContentDisposition)
-                                .FileName
-                                .Trim('"');
-                filename = _hostingEnvironment.WebRootPath + "\\" + file.FileName;
-                size += file.Length;
-                using (FileStream fs = System.IO.File.Create(filename))
-                {
-                    file.CopyTo(fs);
-                    fs.Flush();
-                }
-            }
+            // Load the file into the server file system
+            FileSystem fileSystem = new FileSystem(_hostingEnvironment, _logger);
+            fileSystem.LoadFilesToFS(files);
+
             try
             {
-                string sWebRootFolder = _hostingEnvironment.WebRootPath;
+                string sWebRootFolder = _hostingEnvironment.WebRootPath + "\\filesystem\\";
                 string sFileName = files[0].FileName;
                 FileInfo filePath = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
 
-                String[,] data = Import(filePath);
+                // Excel file to String[,]
+                ExcelTools excelTools = new ExcelTools(_logger, _hostingEnvironment);
+                String[,] data = excelTools.ExcelToStringArray(filePath, "DeploymentRequests");
 
-                // Find TargetDate (Column 9 "I") that is between the chosen startDate and endDate
-                List<String[]> result = FindRowsInDateRange(data, startDate, endDate);
+                // Find TargetDate (Column 8 "I") that is between the chosen startDate and endDate
+                List<String[]> result = excelTools.FindRowsInDateRange(8, data, startDate, endDate);
 
-                await GenerateEmails(result);
+                await GenerateEmails(result, emailSendsTo);
 
                 String resultString = ListToString(result);
 
@@ -78,7 +68,7 @@ namespace TeamSite.Controllers
             }
         }
         
-        public async Task GenerateEmails(List<String[]> excelTable)
+        public async Task GenerateEmails(List<String[]> excelTable, string emailSendsTo)
         {
             foreach(var row in excelTable)
             {
@@ -96,7 +86,7 @@ namespace TeamSite.Controllers
 
                 try
                 {
-                    await SendEmailAsync(emailTo, emailFrom, programName, launchDate);
+                    await SendEmailAsync(emailSendsTo, emailTo, emailFrom, programName, launchDate);
                 }
                 catch(Exception ex)
                 {
@@ -124,70 +114,13 @@ namespace TeamSite.Controllers
             return output;
         }
 
-        public List<String[]> FindRowsInDateRange(String[,] data, DateTime startDate, DateTime endDate)
-        {
-            List<String[]> result = new List<string[]>();
-            var numRows = data.GetLength(0);
-            for(int i = 2; i < numRows; i++)
-            {
-                if(data[i, 8] != null && data[i, 8] != "" && Convert.ToDateTime(data[i, 8]) >= startDate && Convert.ToDateTime(data[i, 8]) <= endDate)
-                {
-                    String[] temp = new String[data.GetLength(1)];
-                    for(int j = 0; j < temp.Length; j++)
-                    {
-                        temp[j] = data[i, j];
-                    }
-                    result.Add(temp);
-                }
-            }
-            return result;
-        }
-
-        [HttpGet]
-        [Route("Import")]
-        public String[,] Import(FileInfo filePath)
-        {
-            try
-            {
-                using (ExcelPackage package = new ExcelPackage(filePath))
-                {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets["DeploymentRequests"];
-                    int RowCount = worksheet.Dimension.Rows;
-                    int ColCount = worksheet.Dimension.Columns;
-
-                    String[,] data = new String[RowCount, ColCount];
-
-                    for (int row = 1; row <= RowCount; row++)
-                    {
-                        for (int col = 1; col <= ColCount; col++)
-                        {
-                            if (worksheet.Cells[row, col].Text != null)
-                            {
-                                data[row-1, col-1] = worksheet.Cells[row, col].Text.ToString();
-                            }
-                            else
-                            {
-                                data[row-1, col-1] = "";
-                            }
-                        }
-                    }
-                    return data;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Some error occured while importing." + ex.Message);
-                return new String[0,0];
-            }
-        }
-
-        public async Task SendEmailAsync(string emailTo, string emailFrom, string programName, DateTime launchDate)
+        public async Task SendEmailAsync(string emailSendsTo, string emailTo, string emailFrom, string programName, DateTime launchDate)
         {
             try
             {
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress("brian.hanus@outlook.com"));
-                message.To.Add(new MailboxAddress("brian.hanus@ecolab.com"));
+                message.To.Add(new MailboxAddress(emailSendsTo));
                 message.Subject = programName + " - MileStone";
                 message.Body = new TextPart("html")
                 {
@@ -213,6 +146,29 @@ namespace TeamSite.Controllers
             catch(Exception e)
             {
                 _logger.LogCritical("Email not sent: " + e.Message);
+            }
+        }
+
+        public async Task CreateFormChangeTemplates(List<IFormFile> stetonFiles)
+        {
+            FileSystem fileSystem = new FileSystem(_hostingEnvironment, _logger);
+
+            fileSystem.LoadFilesToFS(stetonFiles);
+
+            try
+            {
+                string sWebRootFolder = _hostingEnvironment.WebRootPath + "\\filesystem\\";
+                string sFileName = stetonFiles[0].FileName;
+                FileInfo filePath = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
+
+                ExcelTools excelTools = new ExcelTools(_logger, _hostingEnvironment);
+                excelTools.CopyFormToTemplate(filePath);
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Some error occured in UploadFiles." + ex.Message + " " + ex.StackTrace);
             }
         }
     }
