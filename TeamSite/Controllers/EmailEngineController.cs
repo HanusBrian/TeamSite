@@ -81,7 +81,7 @@ namespace TeamSite.Controllers
         {
             foreach(var row in excelTable)
             {
-                //Get Email To address by concatenating first and last name with @ecolab.com
+                //Get Email To address by concatenating first and last name with @ecolab.com 
                 String emailTo = row[4];
 
                 //Get email from, determined by Initials
