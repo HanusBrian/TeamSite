@@ -105,7 +105,7 @@ namespace TeamSite.Models
                 int RowCount = worksheet.Dimension.Rows;
                 int ColCount = worksheet.Dimension.Columns;
 
-                string templateRootFolder = _hostingEnvironment.WebRootPath + "\\filesystem\\templates\\";
+                string templateRootFolder = _hostingEnvironment.WebRootPath + "\\templates\\";
                 FileInfo formChange = new FileInfo(Path.Combine(templateRootFolder, "Form Change Template V1.xlsm"));
 
                 // Copy form info to template

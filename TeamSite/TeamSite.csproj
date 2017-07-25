@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\filesystem\templates\Form Change Template V1.xlsm" />
+    <Content Include="wwwroot\templates\Form Change Template V1.xlsm" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.1" />
@@ -27,6 +27,9 @@
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\templates\Form Change Template V1.xlsm" />
   </ItemGroup>
 
 </Project>
