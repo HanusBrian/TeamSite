@@ -32,7 +32,7 @@ namespace TeamSite.Models
                                 .Parse(file.ContentDisposition)
                                 .FileName
                                 .Trim('"');
-                filename = _hostingEnvironment.WebRootPath + "\\filesystem\\" + file.FileName;
+                filename = _hostingEnvironment.WebRootPath + "/filesystem/" + file.FileName;
                 size += file.Length;
                 if (size > 0) countFiles++;
                 using (FileStream fs = System.IO.File.Create(filename))
