@@ -7,10 +7,6 @@
   <PropertyGroup>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Include="wwwroot\templates\Form Change Template V1.xlsm" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.1" />
     <PackageReference Include="MailKit" Version="1.16.2" />
@@ -27,9 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="wwwroot\templates\Form Change Template V1.xlsm" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\filesystem\" />
