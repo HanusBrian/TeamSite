@@ -2,21 +2,6 @@
     ViewData["Title"] = "Create new Milestone Rule";
 }
 
-<h1>Configure Milestone Email Distribution</h1>
-
-@*@using (Html.BeginForm("Upload", "EmailEngine"))
-{*@
-<h1>Step 1: Create Form Change Templates</h1>
-<form method="post" enctype="multipart/form-data" asp-controller="EmailEngine" asp-action="CreateFormChangeTemplates">
-    <div class="row">
-        <label>Upload Steton Form Excel(s) here</label>
-        <div class="form-group">
-            <input class="row" type="file" name="stetonFiles" />
-        </div>
-    </div>
-    <button class="btn btn-primary" type="submit">Submit</button>
-</form>
-
 <h1>Create and Send Milestone Emails</h1>
 <form method="post" enctype="multipart/form-data" asp-controller="EmailEngine" asp-action="UploadFiles">
     <div class="row">
