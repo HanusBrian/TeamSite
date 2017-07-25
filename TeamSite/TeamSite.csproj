@@ -31,5 +31,8 @@
   <ItemGroup>
     <None Include="wwwroot\templates\Form Change Template V1.xlsm" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\filesystem\" />
+  </ItemGroup>
 
 </Project>
