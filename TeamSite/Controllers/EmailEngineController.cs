@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using TeamSite.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-
+using Microsoft.Extensions.Configuration;
 
 namespace TeamSite.Controllers
 {
@@ -38,7 +38,6 @@ namespace TeamSite.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFiles(List<IFormFile> files, DateTime startDate, DateTime endDate, string emailSendsTo)
         {
-            _logger.LogCritical("Files: " + files.Any() + " startDate: " + startDate + " endDate: " + endDate + " emailSendsTo: " + emailSendsTo);
             // Load the file into the server file system
             FileSystem fileSystem = new FileSystem(_hostingEnvironment, _logger);
             try
@@ -49,7 +48,6 @@ namespace TeamSite.Controllers
             {
                 _logger.LogError("Failed to load files to FS: " + ex.Message);
             }
-            
 
             try
             {
@@ -81,16 +79,10 @@ namespace TeamSite.Controllers
         {
             foreach(var row in excelTable)
             {
-                //Get Email To address by concatenating first and last name with @ecolab.com 
-                String emailTo = row[4];
-
-                //Get email from, determined by Initials
-                String emailFrom = row[7];
-
-                String programName = row[2];
-
+                string emailTo = row[4];
+                string emailFrom = row[7];
+                string programName = row[2];
                 bool isNewLaunch = (row[5] == "New Launch"? true : false);
-
                 DateTime launchDate = Convert.ToDateTime(row[8]);
 
                 try
@@ -146,8 +138,13 @@ namespace TeamSite.Controllers
 
                 using (var client = new SmtpClient())
                 {
+                    var Configuration = new ConfigurationBuilder()
+                        .SetBasePath(_hostingEnvironment.ContentRootPath)
+                        .AddJsonFile("credentials.json", optional: false, reloadOnChange: true)
+                        .AddEnvironmentVariables()
+                        .Build();
                     await client.ConnectAsync("smtp-mail.outlook.com", 587);
-                    await client.AuthenticateAsync("brian.hanus@outlook.com", "Bh167471");
+                    await client.AuthenticateAsync(Configuration["SMTP:email"], Configuration["SMTP:password"]);
                     await client.SendAsync(message);
                     await client.DisconnectAsync(false);
                 }
