@@ -52,7 +52,7 @@ namespace TeamSite.Controllers
             return View(loginModel);
         }
 
-        public async Task<RedirectResult> Logout(string returnUrl = "/")
+        public async Task<RedirectResult> Logout(string returnUrl = "/Home/Index")
         {
             await signInManager.SignOutAsync();
             return Redirect(returnUrl);
