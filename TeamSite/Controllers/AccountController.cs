@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using TeamSite.Models.ViewModels;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TeamSite.Controllers
 {
@@ -25,7 +24,7 @@ namespace TeamSite.Controllers
         {
             return View(new LoginModel
             {
-                ReturnUrl = returnUrl
+                ReturnUrl = returnUrl ?? "/Admin/Home/Index"
             });
         }
 
@@ -52,11 +51,10 @@ namespace TeamSite.Controllers
             return View(loginModel);
         }
 
-        [AllowAnonymous]
         public async Task<RedirectResult> Logout(string returnUrl = "/Home/Index")
         {
             await signInManager.SignOutAsync();
-            return Redirect("/Home/Index");
+            return Redirect(returnUrl);
         }
     }
 }
