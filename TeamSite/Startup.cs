@@ -42,7 +42,7 @@ namespace TeamSite
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, DbContext db)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -71,6 +71,7 @@ namespace TeamSite
                     template: "{controller=Home}/{action=Index}/{id?}");
 
             });
+            db.Database.Migrate();
             SeedData.EnsurePopulated(app);
             IdentitySeedData.EnsurePopulated(app);
         }
