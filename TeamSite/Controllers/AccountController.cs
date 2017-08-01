@@ -55,7 +55,7 @@ namespace TeamSite.Controllers
         public async Task<RedirectResult> Logout(string returnUrl = "/Home/Index")
         {
             await signInManager.SignOutAsync();
-            return Redirect(returnUrl);
+            return Redirect("/Home/Index");
         }
     }
 }
