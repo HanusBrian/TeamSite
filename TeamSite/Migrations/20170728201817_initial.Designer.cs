@@ -8,40 +8,25 @@ using TeamSite.Models;
 namespace TeamSite.Migrations
 {
     [DbContext(typeof(AADbContext))]
-    partial class AADbContextModelSnapshot : ModelSnapshot
+    [Migration("20170728201817_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("TeamSite.Models.AccountTeam", b =>
-                {
-                    b.Property<int>("AccountTeamID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("TeamName");
-
-                    b.HasKey("AccountTeamID");
-
-                    b.ToTable("AccountTeams");
-                });
 
             modelBuilder.Entity("TeamSite.Models.Client", b =>
                 {
                     b.Property<int>("ClientID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("AccountTeamID");
-
                     b.Property<string>("ClientName");
 
                     b.Property<int>("EcoSureClientID");
 
                     b.HasKey("ClientID");
-
-                    b.HasIndex("AccountTeamID");
 
                     b.ToTable("Clients");
                 });
@@ -65,8 +50,6 @@ namespace TeamSite.Migrations
                     b.Property<int>("EmployeeID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("AccountTeamID");
-
                     b.Property<string>("Email");
 
                     b.Property<string>("FirstName");
@@ -81,26 +64,13 @@ namespace TeamSite.Migrations
 
                     b.HasKey("EmployeeID");
 
-                    b.HasIndex("AccountTeamID");
-
                     b.HasIndex("ManagerEmployeeID");
 
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("TeamSite.Models.Client", b =>
-                {
-                    b.HasOne("TeamSite.Models.AccountTeam")
-                        .WithMany("Clients")
-                        .HasForeignKey("AccountTeamID");
-                });
-
             modelBuilder.Entity("TeamSite.Models.Employee", b =>
                 {
-                    b.HasOne("TeamSite.Models.AccountTeam")
-                        .WithMany("Employees")
-                        .HasForeignKey("AccountTeamID");
-
                     b.HasOne("TeamSite.Models.Employee", "Manager")
                         .WithMany()
                         .HasForeignKey("ManagerEmployeeID");

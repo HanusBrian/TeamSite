@@ -1,0 +1,31 @@
+﻿@model AdminEditEmployeeViewModel
+@{}
+
+<form asp-action="EditEmployee" asp-route-employeeid="@Model.Employee.EmployeeID" method="post">
+    <div class="form-group">
+        <label>Employee Position: </label>
+        <input class="form-control" type="text" value="@Model.Employee.Position" />
+    </div>
+    <div class="form-group">
+        <label>Employee First Name: </label>
+        <input class="form-control" type="text" value="@Model.Employee.FirstName" />
+    </div>
+    <div class="form-group">
+        <label>Employee Last Name: </label>
+        <input class="form-control" type="text" value="@Model.Employee.LastName" />
+    </div>
+    <div class="form-group">
+        <label>E-mail: </label>
+        <input class="form-control" type="email" value="@Model.Employee.Email" />
+    </div>
+    <div class="form-group">
+        <label>Phone: </label>
+        <input class="form-control" type="tel" value="@Model.Employee.Phone" />
+    </div>
+    <div class="form-group">
+        <label>Manager: </label>
+        <input class="form-control" type="text" value="@Model.Employee.Manager" />
+    </div>
+    <button class="btn btn-danger" type="submit">Submit Changes</button>
+    <a class="btn btn-warning" asp-action="Employees">Back</a>
+</form>

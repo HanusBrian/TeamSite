@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using TeamSite.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace TeamSite
 {
@@ -32,6 +33,11 @@ namespace TeamSite
             // Add framework services.
             services.AddDbContext<AADbContext>(options =>
                 options.UseSqlServer(Configuration["Data:AADb:ConnectionString"]));
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                options.UseSqlServer(Configuration["Data:IdentityDb:ConnectionString"]));
+
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>();
+
             services.AddMvc();
         }
 
@@ -52,13 +58,21 @@ namespace TeamSite
             }
 
             app.UseStaticFiles();
+            app.UseIdentity();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                    name: "areaRoute",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    
+                routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
             });
+            SeedData.EnsurePopulated(app);
+            IdentitySeedData.EnsurePopulated(app);
         }
     }
 }

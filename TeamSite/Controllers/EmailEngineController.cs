@@ -40,20 +40,13 @@ namespace TeamSite.Controllers
         {
             // Load the file into the server file system
             FileSystem fileSystem = new FileSystem(_hostingEnvironment, _logger);
+            
+            string sWebRootFolder = _hostingEnvironment.WebRootPath + "/filesystem/";
+            string sFileName = files[0].FileName;
+            FileInfo filePath = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
             try
             {
                 fileSystem.LoadFilesToFS(files);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to load files to FS: " + ex.Message);
-            }
-
-            try
-            {
-                string sWebRootFolder = _hostingEnvironment.WebRootPath + "/filesystem/";
-                string sFileName = files[0].FileName;
-                FileInfo filePath = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
 
                 // Excel file to String[,] obviously
                 ExcelTools excelTools = new ExcelTools(_logger, _hostingEnvironment);
@@ -68,10 +61,21 @@ namespace TeamSite.Controllers
 
                 return View("UploadFiles", result);
             }
+            catch (FileNotFoundException fnf)
+            {
+                _logger.LogError("File not found, failed to load files to FS: " + fnf.Message);
+                return View("UploadFiles", null);
+            }
             catch (Exception ex)
             {
                 _logger.LogError("Some error occured in UploadFiles." + ex.Message + " " + ex.StackTrace);
                 return View("UploadFiles", null);
+            }
+            finally{
+                if (System.IO.File.Exists(filePath.ToString()))
+                {
+                    System.IO.File.Delete(filePath.ToString());
+                }
             }
         }
         
@@ -117,10 +121,15 @@ namespace TeamSite.Controllers
 
         public async Task SendEmailAsync(string emailSendsTo, string emailTo, string emailFrom, string programName, DateTime launchDate)
         {
+            var Configuration = new ConfigurationBuilder()
+                        .SetBasePath(_hostingEnvironment.ContentRootPath)
+                        .AddJsonFile("credentials.json", optional: false, reloadOnChange: true)
+                        .AddEnvironmentVariables()
+                        .Build();
             try
             {
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("brian.hanus@outlook.com"));
+                message.From.Add(new MailboxAddress(Configuration["SMTP:email"]));
                 message.To.Add(new MailboxAddress(emailSendsTo));
                 message.Subject = programName + " - MileStone";
                 message.Body = new TextPart("html")
@@ -138,11 +147,6 @@ namespace TeamSite.Controllers
 
                 using (var client = new SmtpClient())
                 {
-                    var Configuration = new ConfigurationBuilder()
-                        .SetBasePath(_hostingEnvironment.ContentRootPath)
-                        .AddJsonFile("credentials.json", optional: false, reloadOnChange: true)
-                        .AddEnvironmentVariables()
-                        .Build();
                     await client.ConnectAsync("smtp-mail.outlook.com", 587);
                     await client.AuthenticateAsync(Configuration["SMTP:email"], Configuration["SMTP:password"]);
                     await client.SendAsync(message);

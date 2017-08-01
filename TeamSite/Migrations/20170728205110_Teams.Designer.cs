@@ -8,9 +8,10 @@ using TeamSite.Models;
 namespace TeamSite.Migrations
 {
     [DbContext(typeof(AADbContext))]
-    partial class AADbContextModelSnapshot : ModelSnapshot
+    [Migration("20170728205110_Teams")]
+    partial class Teams
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")

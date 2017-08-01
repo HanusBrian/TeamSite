@@ -22,7 +22,6 @@ namespace TeamSite.Models
 
         public String[,] ExcelToStringArray(FileInfo filePath, String worksheetName)
         {
-            _logger.LogCritical("FilePath: " + filePath + "WorksheetName: " + worksheetName);
             try
             {
                 using (ExcelPackage package = new ExcelPackage(filePath))
