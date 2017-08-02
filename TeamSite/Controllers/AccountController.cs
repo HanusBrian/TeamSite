@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using TeamSite.Models.ViewModels;
-
+using Microsoft.AspNetCore.Http.Authentication;
+using System;
 
 namespace TeamSite.Controllers
 {
@@ -13,6 +14,7 @@ namespace TeamSite.Controllers
     {
         private UserManager<IdentityUser> userManager;
         private SignInManager<IdentityUser> signInManager;
+
         public AccountController(UserManager<IdentityUser> userMgr, SignInManager<IdentityUser> signInMgr)
         {
             userManager = userMgr;
@@ -51,10 +53,12 @@ namespace TeamSite.Controllers
             return View(loginModel);
         }
 
-        public async Task<RedirectResult> Logout(string returnUrl = "/Home/Index")
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout(string returnUrl = "/Home/Index")
         {
             await signInManager.SignOutAsync();
-            return Redirect(returnUrl);
+            return RedirectToAction(returnUrl); ;
         }
     }
 }
