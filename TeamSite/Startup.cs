@@ -54,7 +54,7 @@ namespace TeamSite
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            app.UseDeveloperExceptionPage();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

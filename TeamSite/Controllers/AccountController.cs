@@ -45,7 +45,7 @@ namespace TeamSite.Controllers
                     if ((await signInManager.PasswordSignInAsync(user,
                     loginModel.Password, false, false)).Succeeded)
                     {
-                        return Redirect(loginModel?.ReturnUrl ?? "/Admin/Home/Index");
+                        return Redirect(loginModel?.ReturnUrl ?? "/Admin");
                     }
                 }
             }
@@ -53,12 +53,11 @@ namespace TeamSite.Controllers
             return View(loginModel);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout(string returnUrl = "/Home/Index")
+        [AllowAnonymous]
+        public async Task<IActionResult> Logout(string returnUrl)
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction(returnUrl); ;
+            return View();
         }
     }
 }
