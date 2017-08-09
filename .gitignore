@@ -1,8 +1,0 @@
-/filesystem/*
-credentials.json
-/filesystem
-/Models/IdentitySeedData.cs
-/Models/SeedData.cs
-appsettings.json
-appsettings.Development.json
-/bin/*
