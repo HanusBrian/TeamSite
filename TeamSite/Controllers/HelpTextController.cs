@@ -33,11 +33,10 @@ namespace TeamSite.Controllers
         [HttpPost]
         public FileResult DocToFiles(List<IFormFile> files)
         {
+            FileSystem fileSystem = new FileSystem(_hostingEnvironment, _logger);
+            FileInfo fileInfo = fileSystem.LoadFile(files);
             try
             {
-                FileSystem fileSystem = new FileSystem(_hostingEnvironment, _logger);
-                FileInfo fileInfo = fileSystem.LoadFile(files);
-
                 Encoding wind1252 = Encoding.GetEncoding(1252);
                 Encoding utf8 = Encoding.UTF8;
                 byte[] wind1252Bytes = ReadFile(fileInfo.FullName);
@@ -68,8 +67,9 @@ namespace TeamSite.Controllers
             }
             finally
             {
-                CleanTempFiles(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/");
-                CleanTempFiles(_hostingEnvironment.WebRootPath + "/filesystem/zipFiles/");
+                CleanTempFolders(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/");
+                CleanTempFolders(_hostingEnvironment.WebRootPath + "/filesystem/zipFiles/");
+                CleanTempFile(_hostingEnvironment.WebRootPath + "/filesystem/" + fileInfo.Name);
             }
             return null;
         }
@@ -82,7 +82,16 @@ namespace TeamSite.Controllers
             return File(fileBytes, "application/zip", fileName);
         }
 
-        private void CleanTempFiles(string path)
+        private void CleanTempFile(string path)
+        {
+            System.IO.DirectoryInfo di = new DirectoryInfo(path);
+
+            FileInfo file = new FileInfo(path);
+            file.Delete();
+
+        }
+
+        private void CleanTempFolders(string path)
         {
             System.IO.DirectoryInfo di = new DirectoryInfo(path);
 
