@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace TeamSite.Controllers
 {
-    public class FormBuilder : Controller
+    public class FormBuilderController : Controller
     {
         public IActionResult Index()
         {

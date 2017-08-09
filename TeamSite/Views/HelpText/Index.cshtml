@@ -1,0 +1,11 @@
+﻿@{}
+
+<h1>HelpText Tools</h1>
+
+<form method="post" enctype="multipart/form-data" asp-controller="HelpText" asp-action="DocToFiles">
+    <div class="form-group">
+        <label>Please Upload your .htm HelpText file:</label>
+        <input class="form-control" type="file" name="files" />
+    </div>
+    <button type="submit" class="btn btn-primary">Split HelpText</button>
+</form>

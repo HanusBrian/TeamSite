@@ -10,9 +10,11 @@
 
   <ItemGroup>
     <Content Remove="wwwroot/filesystem\Schedule Planning and Modeling_072117.xlsx" />
+    <Content Remove="wwwroot/filesystem\zipFiles\HelpText.zip" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.5.1" />
     <PackageReference Include="MailKit" Version="1.16.2" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.0.5" />
@@ -30,11 +32,15 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="wwwroot\filesystem\" />
-    <Folder Include="wwwroot\filesystem\" />
-    <Folder Include="wwwroot\filesystem\" />
-    <Folder Include="wwwroot\filesystem\" />
-    <Folder Include="wwwroot\filesystem\" />
+    <Folder Include="wwwroot\filesystem\tempHelpText\" />
+    <Folder Include="wwwroot\filesystem\tempHelpText\" />
+    <Folder Include="wwwroot\filesystem\zipFiles\" />
+    <Folder Include="wwwroot\filesystem\tempHelpText\" />
+    <Folder Include="wwwroot\filesystem\tempHelpText\" />
+    <Folder Include="wwwroot\filesystem\tempHelpText\" />
+    <Folder Include="wwwroot\filesystem\tempHelpText\" />
+    <Folder Include="wwwroot\filesystem\tempHelpText\" />
+    <Folder Include="wwwroot\filesystem\zipFiles\" />
   </ItemGroup>
 
 </Project>

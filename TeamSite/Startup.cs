@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +28,8 @@ namespace TeamSite
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            //services.AddLogging();
+
             services.AddDbContext<AADbContext>(options =>
                 options.UseSqlServer(Configuration["Data:AADb:ConnectionString"]));
             services.AddDbContext<AppIdentityDbContext>(options =>
