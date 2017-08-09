@@ -1,1 +1,5 @@
-﻿/TeamSite/filesystem/*
+/filesystem/*
+credentials.json
+/filesystem
+/Models/IdentitySeedData.cs
+/Models/SeedData.cs
