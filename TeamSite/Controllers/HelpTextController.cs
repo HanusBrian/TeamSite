@@ -159,19 +159,26 @@ namespace TeamSite.Controllers
         {
             foreach (var helpText in splitText)
             {
-                var HtmlDoc = new HtmlDocument();
-                HtmlDoc.LoadHtml(helpText);
-
-                var html = HtmlDoc.DocumentNode.SelectSingleNode("//table/tr/td/p/b");
-                int index = html.InnerText.IndexOf("&nbsp;") != -1 ? html.InnerText.IndexOf("&nbsp;") : html.InnerText.IndexOf(" ");
-                string fileName = html.InnerText.Substring(0, index);
-
-                using (FileStream fs = new FileStream(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/" + fileName + ".htm", FileMode.Create))
+                try
                 {
-                    using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
+                    var HtmlDoc = new HtmlDocument();
+                    HtmlDoc.LoadHtml(helpText);
+
+                    var html = HtmlDoc.DocumentNode.SelectSingleNode("//table/tr/td/p/b");
+                    int index = html.InnerText.IndexOf("&nbsp;") != -1 ? html.InnerText.IndexOf("&nbsp;") : html.InnerText.IndexOf(" ");
+                    string fileName = html.InnerText.Substring(0, index);
+
+                    using (FileStream fs = new FileStream(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/" + fileName + ".htm", FileMode.Create))
                     {
-                        w.WriteLine(helpText);
+                        using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
+                        {
+                            w.WriteLine(helpText);
+                        }
                     }
+                }
+                catch(Exception e)
+                {
+                    _logger.LogCritical("Error in SaveToFiles: " + e.Message);
                 }
             }
         }
