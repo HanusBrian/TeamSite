@@ -61,9 +61,6 @@ namespace TeamSite.Controllers
                 FileInfo ZipFileInfo = new FileInfo(_hostingEnvironment.WebRootPath + "/filesystem/zipFiles/HelpText.zip");
 
                 return UploadFileToUser(ZipFileInfo);
-
-                CleanTempFiles(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/");
-                CleanTempFiles(_hostingEnvironment.WebRootPath + "/filesystem/zipFiles/");
             }
             catch (Exception e)
             {
