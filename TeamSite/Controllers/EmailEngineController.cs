@@ -11,9 +11,11 @@ using TeamSite.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TeamSite.Controllers
 {
+    [Authorize]
     public class EmailEngineController : Controller
     {
         private readonly ILogger _logger;
