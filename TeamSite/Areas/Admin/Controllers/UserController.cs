@@ -95,19 +95,22 @@ namespace TeamSite.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Upload(List<IFormFile> file)
         {
-            logger.LogCritical(file.ToString());
+            _SubNavViewModel viewModel = new _SubNavViewModel()
+            {
+                Title = subNavViewModel.Title,
+                Tabs = subNavViewModel.Tabs
+            };
+
+            ExcelTools excelTools = new ExcelTools(logger, hostingEnvironment);
 
             FileSystem fs = new FileSystem(hostingEnvironment, logger);
+            fs.LoadFile(file);
 
             string sWebRootFolder = hostingEnvironment.WebRootPath + "/filesystem/";
             string sFileName = file[0].FileName;
             FileInfo fileInfo = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
-
-            logger.LogCritical(fileInfo.FullName);
-
             try
             {
-                ExcelTools excelTools = new ExcelTools(logger, hostingEnvironment);
                 string[,] array = excelTools.ExcelToStringArray(fileInfo, "Users");
 
                 logger.LogCritical(array[1,1]);
@@ -149,7 +152,7 @@ namespace TeamSite.Areas.Admin.Controllers
             catch(Exception ex)
             {
                 logger.LogError("Some error occured in UploadFiles." + ex.Message + " " + ex.StackTrace);
-                return View("UploadFiles", null);
+                return View("Upload", viewModel);
             }
             finally
             {

@@ -78,6 +78,7 @@ namespace TeamSite.Areas.Admin.Controllers
             ExcelTools excelTools = new ExcelTools(logger, hostingEnvironment);
 
             FileSystem fs = new FileSystem(hostingEnvironment, logger);
+            fs.LoadFile(file);
 
             string sWebRootFolder = hostingEnvironment.WebRootPath + "/filesystem/";
             string sFileName = file[0].FileName;

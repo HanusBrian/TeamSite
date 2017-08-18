@@ -12,12 +12,12 @@ namespace TeamSite.Models
 {
     public class ExcelTools
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ExcelTools(ILogger logger, IHostingEnvironment hostingEnvironment)
+        public ExcelTools(ILogger _logger, IHostingEnvironment hostingEnvironment)
         {
-            _logger = logger;
+            logger = _logger;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -52,7 +52,7 @@ namespace TeamSite.Models
             }
             catch (Exception e)
             {
-                _logger.LogCritical("Error in CopyRow: " + e.Message);
+                logger.LogCritical("Error in CopyRow: " + e.Message);
             }
 
             return new string[0];
@@ -89,6 +89,8 @@ namespace TeamSite.Models
                     int RowCount = worksheet.Dimension.Rows;
                     int ColCount = worksheet.Dimension.Columns;
 
+                    logger.LogCritical("Rows: " + RowCount + "  Cols: " + ColCount);
+
                     String[,] data = new String[RowCount, ColCount];
 
                     for (int row = 1; row <= RowCount; row++)
@@ -110,7 +112,7 @@ namespace TeamSite.Models
             }
             catch (Exception ex)
             {
-                _logger.LogError("Some error occured while importing: " + ex.Message);
+                logger.LogError("Some error occured while importing: " + ex.Message);
                 return new String[0, 0];
             }
         }
@@ -153,13 +155,13 @@ namespace TeamSite.Models
 
                 // Run macro to populate master
                 ExcelWorksheet control = templatePackage.Workbook.Worksheets["Control"];
-                _logger.LogWarning(control.Workbook.CodeModule.ToString());
+                logger.LogWarning(control.Workbook.CodeModule.ToString());
 
                 templatePackage.Save();
             }
             catch(Exception ex)
             {
-                _logger.LogError("Some error occured in CopyFormToTemplate.  " + ex.Message + " " + ex.StackTrace);
+                logger.LogError("Some error occured in CopyFormToTemplate.  " + ex.Message + " " + ex.StackTrace);
             }
         }
     }
