@@ -84,7 +84,6 @@ namespace TeamSite
             });
 
             teamDb.Database.Migrate();
-            SeedData.EnsurePopulated(app);
             TeamSiteDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
         }
     }

@@ -95,15 +95,22 @@ namespace TeamSite.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Upload(List<IFormFile> file)
         {
+            logger.LogCritical(file.ToString());
+
             FileSystem fs = new FileSystem(hostingEnvironment, logger);
 
             string sWebRootFolder = hostingEnvironment.WebRootPath + "/filesystem/";
             string sFileName = file[0].FileName;
             FileInfo fileInfo = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
+
+            logger.LogCritical(fileInfo.FullName);
+
             try
             {
                 ExcelTools excelTools = new ExcelTools(logger, hostingEnvironment);
                 string[,] array = excelTools.ExcelToStringArray(fileInfo, "Users");
+
+                logger.LogCritical(array[1,1]);
 
                 int numRows = array.GetLength(0);
 
@@ -114,6 +121,8 @@ namespace TeamSite.Areas.Admin.Controllers
                     string[] row = excelTools.GetRowFromArray(array, i);
                     string roleName = row[7];
                     string password = row[8];
+
+                    logger.LogCritical(row[8]);
 
                     AppUser user = new AppUser
                     {
@@ -129,7 +138,6 @@ namespace TeamSite.Areas.Admin.Controllers
                     if (result.Succeeded)
                     {
                         result = await userManager.AddToRoleAsync(user, roleName);
-
                     }
 
                     if (i == numRows - 1 && result.Succeeded)
