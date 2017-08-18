@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MailKit.Net.Smtp;
@@ -19,9 +18,9 @@ namespace TeamSite.Controllers
     public class EmailEngineController : Controller
     {
         private readonly ILogger _logger;
-        private readonly AADbContext _db;
+        private readonly TeamSiteDbContext _db;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public EmailEngineController(ILogger<EmailEngineController> logger, AADbContext db, IHostingEnvironment hostingEnvironment)
+        public EmailEngineController(ILogger<EmailEngineController> logger, TeamSiteDbContext db, IHostingEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
             _db = db;
@@ -45,14 +44,14 @@ namespace TeamSite.Controllers
             
             string sWebRootFolder = _hostingEnvironment.WebRootPath + "/filesystem/";
             string sFileName = files[0].FileName;
-            FileInfo filePath = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
+            FileInfo fileInfo = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
             try
             {
                 fileSystem.LoadFilesToFS(files);
 
                 // Excel file to String[,] obviously
                 ExcelTools excelTools = new ExcelTools(_logger, _hostingEnvironment);
-                String[,] data = excelTools.ExcelToStringArray(filePath, "DeploymentRequests");
+                String[,] data = excelTools.ExcelToStringArray(fileInfo, "DeploymentRequests");
 
                 // Find TargetDate (Column 8 "I") that is between the chosen startDate and endDate
                 List<String[]> result = excelTools.FindRowsInDateRange(8, data, startDate, endDate);
@@ -74,9 +73,9 @@ namespace TeamSite.Controllers
                 return View("UploadFiles", null);
             }
             finally{
-                if (System.IO.File.Exists(filePath.ToString()))
+                if (System.IO.File.Exists(fileInfo.ToString()))
                 {
-                    System.IO.File.Delete(filePath.ToString());
+                    FileSystem.CleanTempFile(fileInfo.ToString());
                 }
             }
         }

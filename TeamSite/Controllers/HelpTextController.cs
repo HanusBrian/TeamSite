@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
@@ -11,18 +10,21 @@ using System.IO;
 using HtmlAgilityPack;
 using System.Text;
 using System.IO.Compression;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace TeamSite.Controllers
 {
+    [Authorize]
     public class HelpTextController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger _logger;
-        public HelpTextController(IHostingEnvironment host, ILogger<HelpTextController> logger)
+        private readonly FileSystem fs;
+        public HelpTextController(IHostingEnvironment host, ILogger<HelpTextController> logger, FileSystem _fs)
         {
             _hostingEnvironment = host;
             _logger = logger;
+            fs = _fs;
         }
 
         public IActionResult Index()
@@ -67,9 +69,9 @@ namespace TeamSite.Controllers
             }
             finally
             {
-                CleanTempFolders(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/");
-                CleanTempFolders(_hostingEnvironment.WebRootPath + "/filesystem/zipFiles/");
-                CleanTempFile(_hostingEnvironment.WebRootPath + "/filesystem/" + fileInfo.Name);
+                FileSystem.CleanTempFolders(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/");
+                FileSystem.CleanTempFolders(_hostingEnvironment.WebRootPath + "/filesystem/zipFiles/");
+                FileSystem.CleanTempFile(_hostingEnvironment.WebRootPath + "/filesystem/" + fileInfo.Name);
             }
             return null;
         }
@@ -80,29 +82,6 @@ namespace TeamSite.Controllers
             string fileName = fileInfo.Name;
             var mimeType = fileBytes.GetType();
             return File(fileBytes, "application/zip", fileName);
-        }
-
-        private void CleanTempFile(string path)
-        {
-            System.IO.DirectoryInfo di = new DirectoryInfo(path);
-
-            FileInfo file = new FileInfo(path);
-            file.Delete();
-
-        }
-
-        private void CleanTempFolders(string path)
-        {
-            System.IO.DirectoryInfo di = new DirectoryInfo(path);
-
-            foreach (FileInfo file in di.GetFiles())
-            {
-                file.Delete();
-            }
-            foreach (DirectoryInfo dir in di.GetDirectories())
-            {
-                dir.Delete(true);
-            }
         }
 
         private HtmlNodeCollection cleanNestedTables(HtmlNodeCollection html)

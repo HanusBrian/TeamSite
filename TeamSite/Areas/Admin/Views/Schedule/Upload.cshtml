@@ -1,0 +1,15 @@
+﻿@model _SubNavViewModel
+
+@Html.Partial("~/Views/Shared/_SubNav.cshtml")
+
+<h4>Import Schedule From Excel</h4>
+
+<form asp-controller="Schedule" asp-action="Upload" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Upload Schedule Tracker Here</label>
+        <div class="form-group">
+            <input class="form-control" type="file" name="file" />
+        </div>
+    </div>
+    <button class="btn btn-success" type="submit">Upload Schedule</button>
+</form>

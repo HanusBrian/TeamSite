@@ -1,0 +1,9 @@
+﻿@model _SubNavViewModel
+
+@Html.Partial("~/Views/Shared/_SubNav.cshtml", Model)
+
+<h4>Admin - Schedule Managment</h4>
+
+<ul>
+    <li><a asp-area="Admin" asp-controller="Schedule" asp-action="Upload">Import Schedule Form Excel</a></li>
+</ul>

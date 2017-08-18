@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace TeamSite.Controllers
 {
@@ -16,13 +12,6 @@ namespace TeamSite.Controllers
         public IActionResult Tools()
         {
             ViewData["Message"] = "Productivity Apps";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "A&A contact page";
 
             return View();
         }

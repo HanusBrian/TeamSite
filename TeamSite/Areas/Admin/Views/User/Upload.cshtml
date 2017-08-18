@@ -1,0 +1,11 @@
+﻿@Html.Partial("~/Views/Shared/_SubNav.cshtml")
+
+<h4>Upload User File</h4>
+
+<form method="post" asp-action="Upload" asp-controller="User" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Upload User Excel Here</label>
+        <input class="form-control" type="file" name="file" />
+    </div>
+    <button type="submit" class="btn btn-success">Upload Users</button>
+</form>

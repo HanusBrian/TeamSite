@@ -14,10 +14,68 @@ namespace TeamSite.Models
     {
         private readonly ILogger _logger;
         private readonly IHostingEnvironment _hostingEnvironment;
+
         public ExcelTools(ILogger logger, IHostingEnvironment hostingEnvironment)
         {
             _logger = logger;
             _hostingEnvironment = hostingEnvironment;
+        }
+
+        // load files from fileSystem then get rows
+        public String[] GetRow(int i, FileInfo filePath, String worksheetName)
+        {
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage(filePath))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[worksheetName];
+                    worksheet.Select();
+
+                    int ColCount = worksheet.Dimension.Columns;
+
+                    String[] result = new String[ColCount];
+
+                    for (int col = 1; col <= ColCount; col++)
+                    {
+                        if (worksheet.Cells[i, col].Text != null)
+                        {
+                            result[col - 1] = worksheet.Cells[i, col].Text.ToString();
+                        }
+                        else
+                        {
+                            result[col - 1] = "";
+                        }
+                    }
+
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical("Error in CopyRow: " + e.Message);
+            }
+
+            return new string[0];
+        }
+
+        public string[] GetRowFromArray(string[,] array, int row)
+        {
+            int length = array.GetLength(1);
+            string[] result = new string[length];
+
+            for (int col = 0; col < length; col++)
+            {
+                if (array[row, col] != null)
+                {
+                    result[col] = array[row, col];
+                }
+                else
+                {
+                    result[col] = "";
+                }
+            }
+
+            return result;
         }
 
         public String[,] ExcelToStringArray(FileInfo filePath, String worksheetName)
@@ -26,7 +84,7 @@ namespace TeamSite.Models
             {
                 using (ExcelPackage package = new ExcelPackage(filePath))
                 {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets["DeploymentRequests"];
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[worksheetName];
                     worksheet.Select();
                     int RowCount = worksheet.Dimension.Rows;
                     int ColCount = worksheet.Dimension.Columns;

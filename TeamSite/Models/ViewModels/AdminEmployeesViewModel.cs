@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace TeamSite.Models.ViewModels
 {
-    public class AdminEmployeesViewModel
+    public class AdminEmployeesViewModel : _SubNavViewModel
     {
-        public IEnumerable<Employee> Employees { get; set; }
+        public IEnumerable<AppUser> AppUsers { get; set; }
     }
 }

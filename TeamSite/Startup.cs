@@ -28,14 +28,19 @@ namespace TeamSite
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            //services.AddLogging();
+            services.AddLogging();
 
-            services.AddDbContext<AADbContext>(options =>
-                options.UseSqlServer(Configuration["Data:AADb:ConnectionString"]));
-            services.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseSqlServer(Configuration["Data:IdentityDb:ConnectionString"]));
+            services.AddTransient<FileSystem>();
 
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
+            services.AddDbContext<TeamSiteDbContext>(options =>
+                options.UseSqlServer(Configuration["Data:TeamSiteDb:ConnectionString"]));
+
+            services.AddIdentity<AppUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+            }).AddEntityFrameworkStores<TeamSiteDbContext>().AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -49,7 +54,7 @@ namespace TeamSite
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, AADbContext aadb, AppIdentityDbContext aidb)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, TeamSiteDbContext teamDb)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -76,12 +81,11 @@ namespace TeamSite
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-
             });
-            aadb.Database.Migrate();
-            aidb.Database.Migrate();
+
+            teamDb.Database.Migrate();
             SeedData.EnsurePopulated(app);
-            IdentitySeedData.EnsurePopulated(app);
+            TeamSiteDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
         }
     }
 }

@@ -4,18 +4,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using TeamSite.Models.ViewModels;
-using Microsoft.AspNetCore.Http.Authentication;
-using System;
+using TeamSite.Models;
+
 
 namespace TeamSite.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
-        private UserManager<IdentityUser> userManager;
-        private SignInManager<IdentityUser> signInManager;
+        private UserManager<AppUser> userManager;
+        private SignInManager<AppUser> signInManager;
 
-        public AccountController(UserManager<IdentityUser> userMgr, SignInManager<IdentityUser> signInMgr)
+        public AccountController(UserManager<AppUser> userMgr, SignInManager<AppUser> signInMgr)
         {
             userManager = userMgr;
             signInManager = signInMgr;
@@ -37,7 +37,7 @@ namespace TeamSite.Controllers
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user =
+                AppUser user =
                 await userManager.FindByNameAsync(loginModel.Name);
                 if (user != null)
                 {
@@ -51,6 +51,11 @@ namespace TeamSite.Controllers
             }
             ModelState.AddModelError("", "Invalid name or password");
             return View(loginModel);
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
 
         [AllowAnonymous]

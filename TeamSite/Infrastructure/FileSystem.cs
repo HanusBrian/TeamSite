@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Net.Http.Headers;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
@@ -72,6 +69,28 @@ namespace TeamSite.Models
                 file.CopyTo(fs);
                 fs.Flush();
             }
+        }
+
+        public static void CleanTempFolders(string path)
+        {
+            System.IO.DirectoryInfo di = new DirectoryInfo(path);
+
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in di.GetDirectories())
+            {
+                dir.Delete(true);
+            }
+        }
+
+        public static void CleanTempFile(string path)
+        {
+            DirectoryInfo di = new DirectoryInfo(path);
+
+            FileInfo file = new FileInfo(path);
+            file.Delete();
         }
     }
 }
