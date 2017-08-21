@@ -20,11 +20,13 @@ namespace TeamSite.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger _logger;
         private readonly FileSystem fs;
-        public HelpTextController(IHostingEnvironment host, ILogger<HelpTextController> logger, FileSystem _fs)
+        private readonly ILogger<FileSystem> _fsLogger;
+        public HelpTextController(IHostingEnvironment host, ILogger<HelpTextController> logger, FileSystem _fs, ILogger<FileSystem> fsLogger)
         {
             _hostingEnvironment = host;
             _logger = logger;
             fs = _fs;
+            _fsLogger = fsLogger;
         }
 
         public IActionResult Index()
@@ -35,7 +37,7 @@ namespace TeamSite.Controllers
         [HttpPost]
         public FileResult DocToFiles(List<IFormFile> files)
         {
-            FileSystem fileSystem = new FileSystem(_hostingEnvironment, _logger);
+            FileSystem fileSystem = new FileSystem(_hostingEnvironment, _fsLogger);
             FileInfo fileInfo = fileSystem.LoadFile(files);
             try
             {

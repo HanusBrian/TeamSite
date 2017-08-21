@@ -13,7 +13,7 @@ namespace TeamSite.Models
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger _logger;
 
-        public FileSystem(IHostingEnvironment hostingEnvironment, ILogger logger)
+        public FileSystem(IHostingEnvironment hostingEnvironment, ILogger<FileSystem> logger)
         {
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;

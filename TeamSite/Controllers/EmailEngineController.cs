@@ -18,13 +18,15 @@ namespace TeamSite.Controllers
     public class EmailEngineController : Controller
     {
         private readonly ILogger _logger;
+        private readonly ILogger<FileSystem> _fsLogger;
         private readonly TeamSiteDbContext _db;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public EmailEngineController(ILogger<EmailEngineController> logger, TeamSiteDbContext db, IHostingEnvironment hostingEnvironment)
+        public EmailEngineController(ILogger<EmailEngineController> logger, TeamSiteDbContext db, IHostingEnvironment hostingEnvironment, ILogger<FileSystem> fsLogger)
         {
             _hostingEnvironment = hostingEnvironment;
             _db = db;
             _logger = logger;
+            _fsLogger = fsLogger;
         }
         public IActionResult Index()
         {
@@ -40,7 +42,7 @@ namespace TeamSite.Controllers
         public async Task<IActionResult> UploadFiles(List<IFormFile> files, DateTime startDate, DateTime endDate, string emailSendsTo)
         {
             // Load the file into the server file system
-            FileSystem fileSystem = new FileSystem(_hostingEnvironment, _logger);
+            FileSystem fileSystem = new FileSystem(_hostingEnvironment, _fsLogger);
             
             string sWebRootFolder = _hostingEnvironment.WebRootPath + "/filesystem/";
             string sFileName = files[0].FileName;

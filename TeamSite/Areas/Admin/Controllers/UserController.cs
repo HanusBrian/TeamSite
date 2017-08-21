@@ -22,15 +22,17 @@ namespace TeamSite.Areas.Admin.Controllers
         private UserManager<AppUser> userManager;
         private RoleManager<IdentityRole> roleManager;
         private readonly ILogger logger;
+        private readonly ILogger<FileSystem> _fsLogger;
         private readonly IHostingEnvironment hostingEnvironment;
         private _SubNavViewModel subNavViewModel;
 
-        public UserController(TeamSiteDbContext _db, UserManager<AppUser> usrmgr, RoleManager<IdentityRole> _roleManager, ILogger<UserController> _logger, IHostingEnvironment _hostingEnvironment)
+        public UserController(TeamSiteDbContext _db, UserManager<AppUser> usrmgr, RoleManager<IdentityRole> _roleManager, ILogger<UserController> _logger, IHostingEnvironment _hostingEnvironment, ILogger<FileSystem> fsLogger)
         {
             db = _db;
             userManager = usrmgr;
             roleManager = _roleManager;
             logger = _logger;
+            _fsLogger = fsLogger;
             hostingEnvironment = _hostingEnvironment;
 
             subNavViewModel = new _SubNavViewModel
@@ -103,7 +105,7 @@ namespace TeamSite.Areas.Admin.Controllers
 
             ExcelTools excelTools = new ExcelTools(logger, hostingEnvironment);
 
-            FileSystem fs = new FileSystem(hostingEnvironment, logger);
+            FileSystem fs = new FileSystem(hostingEnvironment, _fsLogger);
             fs.LoadFile(file);
 
             string sWebRootFolder = hostingEnvironment.WebRootPath + "/filesystem/";

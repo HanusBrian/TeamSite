@@ -23,6 +23,7 @@ namespace TeamSite.Controllers
             model.Schedules = from scheduleItem in db.Schedule
                               select scheduleItem;
             model.Programs = from program in db.Program
+
                              select program;
 
             return View(model);
