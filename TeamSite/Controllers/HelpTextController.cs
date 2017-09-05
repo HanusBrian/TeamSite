@@ -11,6 +11,8 @@ using HtmlAgilityPack;
 using System.Text;
 using System.IO.Compression;
 using Microsoft.AspNetCore.Authorization;
+using TeamSite.Infrastructure;
+using TeamSite.Models.ViewModels;
 
 namespace TeamSite.Controllers
 {
@@ -19,49 +21,53 @@ namespace TeamSite.Controllers
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger _logger;
-        private readonly FileSystem fs;
+        private readonly FileSystem _fs;
         private readonly ILogger<FileSystem> _fsLogger;
-        public HelpTextController(IHostingEnvironment host, ILogger<HelpTextController> logger, FileSystem _fs, ILogger<FileSystem> fsLogger)
+        public HelpTextController(IHostingEnvironment host, ILogger<HelpTextController> logger, FileSystem fs, ILogger<FileSystem> fsLogger)
         {
             _hostingEnvironment = host;
             _logger = logger;
-            fs = _fs;
+            _fs = fs;
             _fsLogger = fsLogger;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index(List<string> errorList) => View(errorList);
 
         [HttpPost]
-        public FileResult DocToFiles(List<IFormFile> files)
+        public IActionResult DocToZip(List<IFormFile> files)
         {
             FileSystem fileSystem = new FileSystem(_hostingEnvironment, _fsLogger);
+            //load file into filesystem folder
             FileInfo fileInfo = fileSystem.LoadFile(files);
             try
             {
-                Encoding wind1252 = Encoding.GetEncoding(1252);
-                Encoding utf8 = Encoding.UTF8;
-                byte[] wind1252Bytes = ReadFile(fileInfo.FullName);
-                byte[] utf8Bytes = Encoding.Convert(wind1252, utf8, wind1252Bytes);
-                string utf8String = Encoding.UTF8.GetString(utf8Bytes);
+                //Convert file text to utf8 from windows 1252 encoding
+                byte[] win1252Bytes = ReadFile(fileInfo.FullName);
+                byte[] utf8Bytes = Utils.Win1252ToUtf8(win1252Bytes);
+                string utf8String = Utils.byteArrToString(utf8Bytes);
 
+                //Load string into htmlparser
                 var HtmlDoc = new HtmlDocument();
                 HtmlDoc.LoadHtml(utf8String);
 
+                //extract head tag and all table tags
+                //remove any nested tables from having their own file created
                 var htmlHead = HtmlDoc.DocumentNode.SelectSingleNode("//head");
                 var htmlTables = HtmlDoc.DocumentNode.SelectNodes("//table");
-
                 htmlTables = cleanNestedTables(htmlTables);
 
-                List<string> splitText = SplitFiles(htmlHead, htmlTables);
-                SaveToFiles(splitText);
+                //adds head tag to each table
+                //saves to individual files to filesystem/tempHelpText folder
+                List<string> splitText = CombineHeadWithTables(htmlHead, htmlTables);
+                List<string> saveErrors = SaveToFiles(splitText);
 
+                //zipps filesystem/tempHelpText folder to /filesystem/zipFiles/HelpText.zip
                 ZipFile.CreateFromDirectory(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/", 
                     _hostingEnvironment.WebRootPath + "/filesystem/zipFiles/HelpText.zip");
 
                 FileInfo ZipFileInfo = new FileInfo(_hostingEnvironment.WebRootPath + "/filesystem/zipFiles/HelpText.zip");
+
+                UploadFileToUser(ZipFileInfo);
 
                 return UploadFileToUser(ZipFileInfo);
             }
@@ -71,6 +77,7 @@ namespace TeamSite.Controllers
             }
             finally
             {
+                //clean all created files from filesystem
                 FileSystem.CleanTempFolders(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/");
                 FileSystem.CleanTempFolders(_hostingEnvironment.WebRootPath + "/filesystem/zipFiles/");
                 FileSystem.CleanTempFile(_hostingEnvironment.WebRootPath + "/filesystem/" + fileInfo.Name);
@@ -83,6 +90,7 @@ namespace TeamSite.Controllers
             byte[] fileBytes = System.IO.File.ReadAllBytes(fileInfo.FullName);
             string fileName = fileInfo.Name;
             var mimeType = fileBytes.GetType();
+            Response.Headers.Append("Content-Disposition", "inline; filename=" + fileName);
             return File(fileBytes, "application/zip", fileName);
         }
 
@@ -130,12 +138,12 @@ namespace TeamSite.Controllers
             }
             finally
             {
-                //fileStream.Close();
+                fileStream.Dispose();
             }
             return buffer;
         }
 
-        private List<string> SplitFiles(HtmlNode head, HtmlNodeCollection tables)
+        private List<string> CombineHeadWithTables(HtmlNode head, HtmlNodeCollection tables)
         {
             List<string> result = new List<string>();
             foreach(var table in tables)
@@ -145,8 +153,10 @@ namespace TeamSite.Controllers
             return result;
         }
 
-        private void SaveToFiles(List<string> splitText)
+        private List<string> SaveToFiles(List<string> splitText)
         {
+            string fileName = "";
+            List<string> errorLog = new List<string>();
             foreach (var helpText in splitText)
             {
                 try
@@ -155,8 +165,24 @@ namespace TeamSite.Controllers
                     HtmlDoc.LoadHtml(helpText);
 
                     var html = HtmlDoc.DocumentNode.SelectSingleNode("//table/tr/td/p/b");
-                    int index = html.InnerText.IndexOf("&nbsp;") != -1 ? html.InnerText.IndexOf("&nbsp;") : html.InnerText.IndexOf(" ");
-                    string fileName = html.InnerText.Substring(0, index);
+                    int index;
+                    if (html.InnerText.IndexOf("&nbsp;") != -1)
+                    {
+                        index = html.InnerText.IndexOf("&nbsp;");
+                    }
+                    else if (html.InnerText.IndexOf(" ") != -1)
+                    {
+                        index = html.InnerText.IndexOf(" ");
+                    }
+                    else
+                    {
+                        index = -1;
+                    }
+
+                    if (index != -1)
+                        fileName = html.InnerText.Substring(0, index);
+                    else
+                        fileName = html.InnerText;
 
                     using (FileStream fs = new FileStream(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/" + fileName + ".htm", FileMode.Create))
                     {
@@ -169,8 +195,12 @@ namespace TeamSite.Controllers
                 catch(Exception e)
                 {
                     _logger.LogCritical("Error in SaveToFiles: " + e.Message);
+                    //if file not created add reason to log
+                    errorLog.Add("Error Saving file: " + fileName + "\n" +
+                        "Error message:  " + e.Message);
                 }
             }
+            return errorLog;
         }
     }
 }

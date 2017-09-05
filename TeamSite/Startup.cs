@@ -51,6 +51,7 @@ namespace TeamSite
             });
 
             services.AddMvc();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +71,7 @@ namespace TeamSite
             }
 
             app.UseStaticFiles();
+            app.UseSession();
             app.UseIdentity();
 
             app.UseMvc(routes =>
