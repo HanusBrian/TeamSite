@@ -1,0 +1,21 @@
+﻿@model List<String[]>
+@{}
+
+@if (Model != null)
+{
+    <table>
+        @foreach(var row in Model)
+        {
+            <tr>
+                @for (int j = 0; j < row.GetLength(0); j++)
+                {
+                    <td>@row[j]</td>
+                }
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>File not found!</p>
+}

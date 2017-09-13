@@ -1,0 +1,17 @@
+﻿@model _SubNavViewModel
+
+<nav class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <a asp-area="admin" asp-controller="User" asp-action="Index" class="navbar-brand">@Model.Title</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                @foreach (var tab in Model.Tabs)
+                {
+                    <li><a asp-area="@tab.Area" asp-controller="@tab.Controller" asp-action="@tab.Action">@tab.Name</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,14 @@
+﻿@model _SubNavViewModel
+
+@Html.Partial("~/Views/Shared/_SubNav.cshtml")
+
+<h4>Admin Home</h4>
+<nav>
+    <ul class="list-group">
+        <li class="list-group-item"><h5>Manage:</h5></li>
+        <li class="list-group-item"><a class="btn btn-primary" asp-controller="User" asp-action="Index">Users</a></li>
+        <li class="list-group-item"><a class="btn btn-primary" asp-controller="Role" asp-action="Index">Roles</a></li>
+        <li class="list-group-item"><a class="btn btn-primary" asp-controller="User" asp-action="TeamAlignment">Teams</a></li>
+        <li class="list-group-item"><a class="btn btn-primary" asp-controller="Schedule" asp-action="Index">Schedule</a></li>
+    </ul>
+</nav>

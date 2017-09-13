@@ -6,6 +6,7 @@
 
   <PropertyGroup>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,6 +44,10 @@
     <Folder Include="wwwroot\filesystem\tempHelpText\" />
     <Folder Include="wwwroot\filesystem\tempHelpText\" />
     <Folder Include="wwwroot\filesystem\zipFiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\resources\SlackerAssault.cch" />
+    <None Include="wwwroot\resources\SlackerAssault.cc1" />
   </ItemGroup>
 
 </Project>

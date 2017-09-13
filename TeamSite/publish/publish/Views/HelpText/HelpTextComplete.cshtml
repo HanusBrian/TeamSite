@@ -1,0 +1,15 @@
+﻿@model List<string>
+
+@if (Model.Any())
+{
+    <ul>
+        @foreach (string error in Model)
+        {
+            <li>@error</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Help Text Created Sucessfully</p>
+}

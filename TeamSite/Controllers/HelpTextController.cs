@@ -34,11 +34,17 @@ namespace TeamSite.Controllers
         public IActionResult Index(List<string> errorList) => View(errorList);
 
         [HttpPost]
-        public IActionResult DocToZip(List<IFormFile> files)
+        public IActionResult DocToZip(/*List<IFormFile> files*/)
         {
+            var fileIn = Request.Form.Files;
+            List<IFormFile> files = new List<IFormFile>();
+            files.Add(fileIn.FirstOrDefault());
+
             FileSystem fileSystem = new FileSystem(_hostingEnvironment, _fsLogger);
+
             //load file into filesystem folder
             FileInfo fileInfo = fileSystem.LoadFile(files);
+
             try
             {
                 //Convert file text to utf8 from windows 1252 encoding
@@ -66,8 +72,6 @@ namespace TeamSite.Controllers
                     _hostingEnvironment.WebRootPath + "/filesystem/zipFiles/HelpText.zip");
 
                 FileInfo ZipFileInfo = new FileInfo(_hostingEnvironment.WebRootPath + "/filesystem/zipFiles/HelpText.zip");
-
-                UploadFileToUser(ZipFileInfo);
 
                 return UploadFileToUser(ZipFileInfo);
             }
@@ -97,7 +101,7 @@ namespace TeamSite.Controllers
         private HtmlNodeCollection cleanNestedTables(HtmlNodeCollection html)
         {
             HtmlNodeCollection result = new HtmlNodeCollection(html.FirstOrDefault());
-            int skip = 0; // Set to 1 because parent node already assigned to first node in collection
+            int skip = 0; 
             foreach (var file in html)
             {
                 if (skip > 0)
@@ -198,6 +202,7 @@ namespace TeamSite.Controllers
                     //if file not created add reason to log
                     errorLog.Add("Error Saving file: " + fileName + "\n" +
                         "Error message:  " + e.Message);
+                    Console.WriteLine("Error Saving file: " + fileName);
                 }
             }
             return errorLog;

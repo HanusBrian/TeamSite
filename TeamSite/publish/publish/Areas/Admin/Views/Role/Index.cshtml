@@ -1,0 +1,21 @@
+﻿@model AdminRoleIndexViewModel
+
+@Html.Partial("~/Views/Shared/_SubNav.cshtml")
+
+<h4>Role Manager</h4>
+
+<h5>Roles</h5>
+@if (!Model.Roles.Any())
+{
+    <p>No Roles Found</p>
+}
+else
+{
+    <table>
+        <tr><th>Name</th><th></th></tr>
+        @foreach(var role in Model.Roles)
+        {
+            <tr><td>@role.Name</td><td><a asp-area="Admin" asp-controller="Role" asp-action="Edit">Edit</a><a asp-area="Admin" asp-controller="Role" asp-action="Delete">Delete</a></td></tr>
+        }
+    </table>
+}

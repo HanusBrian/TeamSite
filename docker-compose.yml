@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  teamsite:
+    image: teamsite
+    build:
+      context: ./TeamSite
+      dockerfile: Dockerfile

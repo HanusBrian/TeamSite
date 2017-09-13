@@ -5,14 +5,3 @@ $(document).ready(function () {
     });
 });
 
-//$('#splitHelpText').on('click', (e) => {
-//    e.preventDefault();
-//    var url = $("#splitHelpText").parent()[0].action;
-//    var files = $("#DocToZipFiles")[0].files;
-//    var formData = {
-//        "Files": files
-//    };
-//    window.open(url);
-//});
-
-$('#')

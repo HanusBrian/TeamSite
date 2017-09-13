@@ -1,0 +1,29 @@
+﻿@model ScheduleIndexModel
+
+<h4>Schedule Planing Model</h4>
+
+@if (!Model.Schedules.Any())
+{
+    <p>No records</p>
+}
+else
+{
+    <table class="table-bordered ">
+        <tr><th>ID</th><th>Client</th><th>Complete</th></tr>
+        @foreach (var row in Model.Schedules)
+        {
+            <tr>
+                <td>@row.ScheduleId</td>
+                <td>@row.LaunchDate.ToString("MM/dd/yyyy")</td>
+                <td>@row.Complete</td>
+                @foreach(var program in Model.Programs)
+                {
+                    @if(program.ProgramId == row.ProgramId)
+                    {
+                        <td>@program.Name</td>
+                    }
+                }
+            </tr>
+        }
+    </table>
+}

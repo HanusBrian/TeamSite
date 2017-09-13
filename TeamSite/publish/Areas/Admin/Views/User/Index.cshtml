@@ -1,0 +1,26 @@
+﻿@model AdminUserIndexViewModel
+
+@Html.Partial("~/Views/Shared/_SubNav.cshtml", Model)
+
+<ul class="list-item">
+    @foreach (var user in Model.AppUsers)
+    {
+        <li class="list-group-item">
+            <p>
+                <span>UserName: </span>@user.UserName<br />
+                <span>Email: </span>@user.Email<br />
+                <span>Phone: </span>@user.PhoneNumber<br />
+                @if (user.Roles.Any())
+                {
+                    <span>Roles: </span>
+                    @foreach (var role in user.Roles)
+                    {
+                        @role<br />
+                    }
+                }
+                <span>Position: </span>@user.Position<br />
+
+                <a class="btn btn-warning" asp-action="editEmployee" asp-route-id="@user.Id">Edit</a>
+        </li>
+    }
+</ul>
