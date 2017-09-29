@@ -19,6 +19,14 @@ namespace TeamSite.Models
             _logger = logger;
         }
 
+        public FileInfo NewFile(string name)
+        {
+            string rootFolder = _hostingEnvironment.WebRootPath + "/filesystem/res/";
+            FileInfo fInfo = new FileInfo(Path.Combine(rootFolder, name));
+
+            return fInfo;
+        }
+
         // Load the file into the server file system
         public FileInfo LoadFile(List<IFormFile> files)
         {

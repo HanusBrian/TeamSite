@@ -96,12 +96,12 @@ namespace TeamSite.Areas.Admin.Controllers
                 {
                     row = excelTools.GetRowFromArray(array, i);
 
-                    int excelIndex = CastToInt(row[0]);
+                    int excelIndex = excelTools.CastToInt(row[0]);
                     string clientName = row[1];
                     string programName = row[2];
                     string stringDate = row[8];
                     bool complete = row[11] == "Y" ? true : false;
-                    int revRank = CastToInt(row[14]);
+                    int revRank = excelTools.CastToInt(row[14]);
 
                     DateTime targetDate;
                     DateTime.TryParse(row[8], out targetDate);
@@ -170,16 +170,6 @@ namespace TeamSite.Areas.Admin.Controllers
             }
 
             return RedirectToAction("Index");
-        }
-
-        private int CastToInt(string input)
-        {
-            int result;
-            if (!Int32.TryParse(input, out result))
-            {
-                result = -1;
-            }
-            return result;
         }
     }
 }

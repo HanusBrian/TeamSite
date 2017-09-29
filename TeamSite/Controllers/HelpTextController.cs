@@ -47,14 +47,35 @@ namespace TeamSite.Controllers
 
             try
             {
+                // If the helptext was created using formbuilder the meta tag will have
+                // charset=utf-8;  we just need to read the file to string
+
+                
+                string utf8String = "";
+                string winToUtf8String = "";
+
                 //Convert file text to utf8 from windows 1252 encoding
                 byte[] win1252Bytes = ReadFile(fileInfo.FullName);
                 byte[] utf8Bytes = Utils.Win1252ToUtf8(win1252Bytes);
-                string utf8String = Utils.byteArrToString(utf8Bytes);
+                winToUtf8String = Utils.ByteArrToUtf8String(utf8Bytes);
 
                 //Load string into htmlparser
                 var HtmlDoc = new HtmlDocument();
-                HtmlDoc.LoadHtml(utf8String);
+
+                if (winToUtf8String.Contains("charset=windows-1252"))
+                {
+                    HtmlDoc.LoadHtml(winToUtf8String);
+                }
+                else if (winToUtf8String.Contains("charset=utf-8"))
+                {
+                    utf8String = Encoding.UTF8.GetString(ReadFile(fileInfo.FullName));
+                    HtmlDoc.LoadHtml(utf8String);
+                }
+                else
+                { 
+                    //ERROR: Invalid char set
+                }
+
 
                 //extract head tag and all table tags
                 //remove any nested tables from having their own file created
@@ -169,11 +190,19 @@ namespace TeamSite.Controllers
                     HtmlDoc.LoadHtml(helpText);
 
                     var html = HtmlDoc.DocumentNode.SelectSingleNode("//table/tr/td/p/b");
+                    if (html == null)
+                    {
+                        html = HtmlDoc.DocumentNode.SelectSingleNode("//table/tbody/tr/td/p/b");
+                    }
                     int index;
                     if (html.InnerText.IndexOf("&nbsp;") != -1)
                     {
                         index = html.InnerText.IndexOf("&nbsp;");
                     }
+                    //else if (html.InnerText.IndexOf("\n") != -1)
+                    //{
+                    //    index = html.InnerText.IndexOf("\n");
+                    //}
                     else if (html.InnerText.IndexOf(" ") != -1)
                     {
                         index = html.InnerText.IndexOf(" ");
@@ -188,7 +217,18 @@ namespace TeamSite.Controllers
                     else
                         fileName = html.InnerText;
 
-                    using (FileStream fs = new FileStream(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/" + fileName + ".htm", FileMode.Create))
+                    while (fileName[fileName.Length - 1] == '\n')
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+
+                    while (fileName[fileName.Length - 1] == '\r')
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+
+                    while (fileName[fileName.Length - 1] == '.')
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+
+                    
+
+                        using (FileStream fs = new FileStream(_hostingEnvironment.WebRootPath + "/filesystem/tempHelpText/" + fileName + ".htm", FileMode.Create))
                     {
                         using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
                         {

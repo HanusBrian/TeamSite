@@ -1,16 +1,45 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-<h1>Form Builder 1.0</h1>
+﻿<h1>Form Builder 1.0</h1>
 <h2>Setup</h2>
 <form method="post" enctype="multipart/form-data" asp-controller="FormBuilder" asp-action="UploadTemplate">
     <div class="row">
-        <label>Upload Schedule Tracker Here</label>
         <div class="form-group">
+            <label>Upload Excel File Here</label>
             <input class="row" type="file" name="files" />
         </div>
     </div>
+    <table class="table">
+        <tr>
+            <td><label>What column are the Sequence num's in?</label></td>
+            <td><input name="seqcol" type="number" /></td>
+        </tr>
+        <tr>
+            <td><label>What column are the Categories ID's in?</label></td>
+            <td><input name="catidcol" type="number" /></td>
+        </tr>
+        <tr>
+            <td><label>What column are the Categories in?</label></td>
+            <td><input name="catnamecol" type="number" /></td>
+        </tr>
+        <tr>
+            <td><label>What column is the Question ID in?</label></td>
+            <td><input name="qid" type="number" /></td>
+        </tr>
+        <tr>
+            <td><label>What column is the Question Text in?</label></td>
+            <td><input name="qtext" type="number" /></td>
+        </tr>
+        <tr>
+            <td><label>What column are the Picklists in?</label></td>
+            <td><input name="plist" type="number" /></td>
+        </tr>
+        <tr>
+            <td><label>What column are the Threshold's in?</label></td>
+            <td><input name="thold" type="number" /></td>
+        </tr>
+        <tr>
+            <td><label>What column is the Assessment Criteria in?</label></td>
+            <td><input name="acrit" type="number" /></td>
+        </tr>
+    </table>
+    <button type="submit">Submit</button>
 </form>

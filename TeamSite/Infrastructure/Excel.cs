@@ -7,15 +7,70 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace TeamSite.Models
 {
-    public class ExcelTools
+    public class Excel
     {
         //private readonly ILogger logger;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IHostingEnvironment _he;
+        private FileInfo _fileInfo;
+        public ExcelWorksheet _ws;
+        private ExcelPackage _pack;
 
-        public ExcelTools(ILogger _logger, IHostingEnvironment hostingEnvironment)
+        public Excel(FileInfo fileInfo, ILogger _logger, IHostingEnvironment hostingEnvironment)
         {
+            _fileInfo = fileInfo;
+            SetPack(fileInfo);
+            _he = hostingEnvironment;
             //logger = _logger;
-            _hostingEnvironment = hostingEnvironment;
+        }
+
+        // Set this instance of the ExcelTools object to a specific excel file
+        private void SetPack(FileInfo fileInfo)
+        {
+            _pack = new ExcelPackage(fileInfo);
+        }
+
+        // Set current active worksheet
+        public void SetActiveWorkSheet(string wsName)
+        {
+            _ws = _pack.Workbook.Worksheets[wsName];
+            _ws.Select();
+        }
+
+        public string GetCell(int row, int col)
+        {
+            return _ws.Cells[row, col].Text;
+        }
+
+        public void SaveAs(string name)
+        {
+            string sWebRootFolder = _he.WebRootPath + "/filesystem/res/";
+            FileInfo fInfo = new FileInfo(Path.Combine(sWebRootFolder, name + ".xlsx"));
+            _pack.SaveAs(fInfo);
+        }
+
+        public String[,] WsToStringArray()
+        {
+            int numCols = _ws.Dimension.Columns;
+            int numRows = _ws.Dimension.Rows;
+
+            String[,] array = new String[numRows, numCols];
+
+            for (int row = 1; row <= numRows; row++)
+            {
+                for (int col = 1; col <= numCols; col++)
+                {
+                    if (_ws.Cells[row, col].Text != null)
+                    {
+                        array[row, col] = _ws.Cells[row, col].Text.ToString();
+                    }
+                    else
+                    {
+                        array[row, col] = "";
+                    }
+                }
+            }
+
+            return array;
         }
 
         // load files from fileSystem then get rows
@@ -71,7 +126,6 @@ namespace TeamSite.Models
                     result[col] = "";
                 }
             }
-
             return result;
         }
 
@@ -143,7 +197,7 @@ namespace TeamSite.Models
                 int RowCount = worksheet.Dimension.Rows;
                 int ColCount = worksheet.Dimension.Columns;
 
-                string templateRootFolder = _hostingEnvironment.WebRootPath + "\\templates\\";
+                string templateRootFolder = _he.WebRootPath + "\\templates\\";
                 FileInfo formChange = new FileInfo(Path.Combine(templateRootFolder, "Form Change Template V1.xlsm"));
 
                 // Copy form info to template
@@ -156,7 +210,7 @@ namespace TeamSite.Models
 
                 templatePackage.Save();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //logger.LogError("Some error occured in CopyFormToTemplate.  " + ex.Message + " " + ex.StackTrace);
             }
@@ -173,3 +227,4 @@ namespace TeamSite.Models
         }
     }
 }
+
